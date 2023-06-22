@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Member } from 'src/member/member.entity';
+import { User } from 'src/user/user.entity';
 import { Article } from './article.entity';
 import { Repository } from 'typeorm';
 import { ArticleForm } from './data/ArticleForm';
@@ -10,8 +10,8 @@ export class ArticleService {
   constructor(
     @InjectRepository(Article)
     private articleRepository: Repository<Article>,
-    @InjectRepository(Member)
-    private memberRepository: Repository<Member>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ) {}
 
   getAllArticle(): Promise<Article[]> {
@@ -23,12 +23,12 @@ export class ArticleService {
   }
 
   async postArticle(articleForm: ArticleForm): Promise<Article> {
-    const memberId = articleForm.memberId;
-    const member = await this.memberRepository.findOneById(memberId);
+    const userId = articleForm.userId;
+    const user = await this.userRepository.findOneById(userId);
 
-    if (!member) return null;
+    if (!user) return null;
 
-    return this.articleRepository.save({ ...articleForm, member: member });
+    return this.articleRepository.save({ ...articleForm, user: user });
   }
 
   async updateArticleById(
