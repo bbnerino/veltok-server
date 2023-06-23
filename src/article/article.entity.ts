@@ -1,4 +1,4 @@
-import { Member } from 'src/member/member.entity';
+import { User } from 'src/user/user.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -13,6 +13,6 @@ export class Article {
   content: string;
 
   // eager 옵션을 true로 설정하면, 해당 엔티티를 조회할 때마다 관계된 엔티티를 항상 함께 조회합니다.
-  @ManyToOne(() => Member, (member) => member.articles, { eager: true })
-  member: Member;
+  @ManyToOne(() => User, (user) => user.articles, { eager: true })
+  user: User;
 }

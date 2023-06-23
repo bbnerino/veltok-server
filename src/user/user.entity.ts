@@ -2,7 +2,7 @@ import { Article } from 'src/article/article.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class Member {
+export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -13,8 +13,12 @@ export class Member {
   password: string;
 
   @Column({ type: 'varchar', length: 20 })
-  name: string;
+  nickName: string;
 
-  @OneToMany(() => Article, (article) => article.member)
+  @Column({ type: 'varchar', length: 200, nullable: true })
+  profileUrl: string;
+
+  // 1:N 관계 설정
+  @OneToMany(() => Article, (article) => article.user)
   articles: Article[];
 }

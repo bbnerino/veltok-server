@@ -1,4 +1,4 @@
-import { MemberModule } from './member/member.module';
+import { UserModule } from './user/user.module';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
@@ -24,7 +24,7 @@ import { ArticleModule } from './article/article.module';
       synchronize: true,
     }),
     CafeModule,
-    MemberModule,
+    UserModule,
     ArticleModule,
   ],
 })

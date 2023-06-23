@@ -17,7 +17,7 @@ imports: [
    username: 'root', // DB 접속 계정
    password: '1234', // DB 접속 비밀번호
    database: 'nest', // DB 스키마 이름
-   entities: [Member], // DB 테이블과 매핑될 클래스를 모아둔 배열
+   entities: [User], // DB 테이블과 매핑될 클래스를 모아둔 배열
    synchronize: false, // 애플리케이션 실행 시점에 동기화 여부
  }),
 ],
@@ -55,3 +55,8 @@ query{
 app.module.ts
 
 `npm install --save @nestjs/graphql apollo-server-express graphql`
+
+
+# ERD 
+
+<img src='./README/veltok_1.png' alt=''>
