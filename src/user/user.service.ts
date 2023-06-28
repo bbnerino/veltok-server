@@ -49,31 +49,40 @@ export class UserService {
   // ===========================
 
   // 회원가입
-  create(res: Response, signupForm: SignupForm) {
+  create(signupForm: SignupForm) {
     const newUser = {
       ...signupForm,
       password: bcrypt.hashSync(signupForm.password, 10),
     };
     this.userRepository.save(newUser);
-    return res.status(HttpStatus.CREATED).json();
   }
 
   // 유저 정보 수정
-  async updateUserById(res: Response, id: string, signupForm: SignupForm) {
+  async updateById(id: string, signupForm: SignupForm) {
     const user = await this.userRepository.findOneById(id);
-    if (!user) return res.status(HttpStatus.NOT_FOUND).json();
-
-    this.userRepository.save({
+    if (!user) return null;
+    const newUser = {
       ...user,
       ...signupForm,
-    });
-    return res.status(HttpStatus.ACCEPTED).json(new UserDto(user));
+    };
+    this.userRepository.save(newUser);
+    return new UserDto(newUser);
+  }
+
+  async updatePasswordById(id: string, password: string) {
+    const user = await this.userRepository.findOneById(id);
+    if (!user) return null;
+    const newUser = {
+      ...user,
+      password: bcrypt.hashSync(password, 10),
+    };
+    this.userRepository.save(newUser);
+    return new UserDto(newUser);
   }
 
   // 유저 삭제
-  async deleteUserById(res: Response, id: string) {
+  async deleteById(id: string) {
     const user = await this.userRepository.findOneById(id);
     this.userRepository.remove(user);
-    return res.status(HttpStatus.OK).json();
   }
 }
