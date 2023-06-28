@@ -8,5 +8,6 @@ import { UserController } from './user.controller';
   imports: [TypeOrmModule.forFeature([User])],
   providers: [UserService],
   controllers: [UserController],
+  exports: [UserService], // 다른 모듈에서 UserService를 사용할 수 있도록 exports에 추가
 })
 export class UserModule {}
