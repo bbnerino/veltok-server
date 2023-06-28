@@ -8,10 +8,12 @@ import {
   Post,
   Put,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { SignupForm, UpdatePasswordForm } from './data/user.form';
 import { Response } from 'express';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('user')
 export class UserController {
@@ -28,13 +30,12 @@ export class UserController {
     this.userService.create(signupForm);
     return res.status(HttpStatus.CREATED).json();
   }
-
+  @UseGuards(AuthGuard('access')) // access token 검증
   @Get() // 전체 유저 조회
   async findAll(@Res() res: Response) {
     const users = await this.userService.getAllUser();
     return res.status(200).json(users);
   }
-
   @Put('password')
   async updatePassword(
     @Res() res: Response,

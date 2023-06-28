@@ -6,6 +6,8 @@ import { User } from '../user.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { UserService } from '../user.service';
 import { AuthService } from './auth.service';
+import { JwtRefreshStrategy } from './jwt/jwt-refresh.strategy';
+import { JwtAccessStrategy } from './jwt/jwt-access.strategy';
 
 @Module({
   imports: [
@@ -14,6 +16,7 @@ import { AuthService } from './auth.service';
     JwtModule.register({}), // JWT 모듈 등록
   ],
   controllers: [AuthController],
-  providers: [UserService, AuthService],
+  providers: [UserService, AuthService, JwtRefreshStrategy, JwtAccessStrategy],
+  exports: [JwtRefreshStrategy, JwtAccessStrategy],
 })
 export class AuthModule {}
