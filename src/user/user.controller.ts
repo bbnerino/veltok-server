@@ -10,7 +10,7 @@ import {
   Res,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { SignupForm } from './data/user.form';
+import { SignupForm, UpdatePasswordForm } from './data/user.form';
 import { Response } from 'express';
 
 @Controller('user')
@@ -35,8 +35,17 @@ export class UserController {
     return res.status(200).json(users);
   }
 
+  @Put('password')
+  async updatePassword(
+    @Res() res: Response,
+    @Body() updatePasswordForm: UpdatePasswordForm,
+  ) {
+    await this.userService.updatePassword(updatePasswordForm);
+    return res.status(200).json({ message: '비밀번호 변경 성공' });
+  }
+
   @Get(':id') // 유저 아이디로 조회
-  async findUserById(@Res() res: Response, @Param('id') id: number) {
+  async findById(@Res() res: Response, @Param('id') id: number) {
     const user = await this.userService.findById(id);
     if (!user) {
       return res.status(404).json({ message: '존재하지 않는 유저입니다.' });

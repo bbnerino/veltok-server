@@ -1,10 +1,9 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
-import { SignupForm } from './data/user.form';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { SignupForm, UpdatePasswordForm } from './data/user.form';
 import { User } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserDto } from './data/user.dto';
-import { Response } from 'express';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -26,7 +25,7 @@ export class UserService {
     const user = await this.userRepository.findOne({
       where: { id },
     });
-    if (!user) return null;
+    if (!user) throw new UnauthorizedException('유저가 존재하지 않습니다.');
     return new UserDto(user);
   }
 
@@ -35,7 +34,7 @@ export class UserService {
     const user = await this.userRepository.findOne({
       where: { email },
     });
-    if (!user) return null;
+    if (!user) throw new UnauthorizedException('이메일이 존재하지 않습니다.');
     return user;
   }
 
@@ -43,10 +42,9 @@ export class UserService {
     const user = await this.userRepository.findOne({
       where: { nickName },
     });
-    if (!user) return null;
+    if (!user) throw new UnauthorizedException('유저가 존재하지 않습니다.');
     return new UserDto(user);
   }
-  // ===========================
 
   // 회원가입
   create(signupForm: SignupForm) {
@@ -69,20 +67,27 @@ export class UserService {
     return new UserDto(newUser);
   }
 
-  async updatePasswordById(id: string, password: string) {
+  // 유저 삭제
+  async deleteById(id: string) {
     const user = await this.userRepository.findOneById(id);
-    if (!user) return null;
+    this.userRepository.remove(user);
+  }
+
+  async updatePassword(updatePasswordForm: UpdatePasswordForm) {
+    const { email, password, prevPassword } = updatePasswordForm;
+    const user = await this.findByEmail(email);
+
+    if (!user) {
+      throw new UnauthorizedException('이메일이 존재하지 않습니다.');
+    }
+    const isMatch = bcrypt.compareSync(prevPassword, user.password);
+    if (!isMatch) {
+      throw new UnauthorizedException('비밀번호가 일치하지 않습니다.');
+    }
     const newUser = {
       ...user,
       password: bcrypt.hashSync(password, 10),
     };
     this.userRepository.save(newUser);
-    return new UserDto(newUser);
-  }
-
-  // 유저 삭제
-  async deleteById(id: string) {
-    const user = await this.userRepository.findOneById(id);
-    this.userRepository.remove(user);
   }
 }
