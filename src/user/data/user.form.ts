@@ -3,3 +3,9 @@ export interface SignupForm {
   password: string;
   nickName: string;
 }
+
+export interface UpdatePasswordForm {
+  email: string;
+  prevPassword: string;
+  password: string;
+}

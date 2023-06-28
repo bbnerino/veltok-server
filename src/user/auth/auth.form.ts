@@ -1,4 +1,4 @@
-export class SignInForm {
+export interface SignInForm {
   email: string;
 
   password: string;
