@@ -7,8 +7,13 @@ import { ApolloDriver } from '@nestjs/apollo';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ArticleModule } from './article/article.module';
 import { AuthModule } from './user/auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: ['.env', '.env.development'],
+      isGlobal: true,
+    }),
     GraphQLModule.forRoot({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
