@@ -6,6 +6,7 @@ import { CafeModule } from './cafe/cafe.module';
 import { ApolloDriver } from '@nestjs/apollo';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ArticleModule } from './article/article.module';
+import { AuthModule } from './user/auth/auth.module';
 @Module({
   imports: [
     GraphQLModule.forRoot({
@@ -26,6 +27,7 @@ import { ArticleModule } from './article/article.module';
     CafeModule,
     UserModule,
     ArticleModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
