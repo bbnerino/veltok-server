@@ -6,8 +6,15 @@ import { CafeModule } from './cafe/cafe.module';
 import { ApolloDriver } from '@nestjs/apollo';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ArticleModule } from './article/article.module';
+import { AuthModule } from './user/auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
+import { FileModule } from './common/file/file.module';
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: ['.env', '.env.development'],
+      isGlobal: true,
+    }),
     GraphQLModule.forRoot({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
@@ -26,6 +33,8 @@ import { ArticleModule } from './article/article.module';
     CafeModule,
     UserModule,
     ArticleModule,
+    AuthModule,
+    FileModule,
   ],
 })
 export class AppModule {}
