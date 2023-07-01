@@ -34,7 +34,7 @@ export class UserService {
     const user = await this.userRepository.findOne({
       where: { email },
     });
-    if (!user) throw new UnauthorizedException('이메일이 존재하지 않습니다.');
+    if (!user) return null;
     return user;
   }
 
@@ -47,10 +47,10 @@ export class UserService {
   }
 
   // 회원가입
-  create(signupForm: SignupForm) {
-    const newUser = {
-      ...signupForm,
-      password: bcrypt.hashSync(signupForm.password, 10),
+  create(newUser: User) {
+    newUser = {
+      ...newUser,
+      password: bcrypt.hashSync(newUser.password, 10),
     };
     this.userRepository.save(newUser);
   }

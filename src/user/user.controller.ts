@@ -1,35 +1,62 @@
+import { FileService } from './../common/file/file.service';
 import {
   Body,
   Controller,
   Delete,
   Get,
   HttpStatus,
+  Logger,
   Param,
   Post,
   Put,
   Res,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { SignupForm, UpdatePasswordForm } from './data/user.form';
 import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { User } from './user.entity';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly fileService: FileService,
+  ) {}
 
   @Post() // 회원가입
-  async postUser(@Res() res: Response, @Body() signupForm: SignupForm) {
-    const { email, nickName } = signupForm;
-
-    const hasEmail = await this.userService.findByEmail(email);
-    if (hasEmail) {
-      return res.status(400).json({ message: '이미 존재하는 이메일입니다.' });
+  @UseInterceptors(FileInterceptor('file'))
+  async postUser(
+    @Res() res: Response,
+    @Body() signupForm: SignupForm,
+    @UploadedFile() file,
+  ) {
+    console.log('🔥', file);
+    const { email } = signupForm;
+    if (file) {
+      const a = await this.fileService.uploadFile(file);
+      Logger.log('🔥:' + a);
     }
-    this.userService.create(signupForm);
+
+    if (await this.userService.findByEmail(email))
+      return res.status(400).json({ message: '이미 존재하는 이메일입니다.' });
+
+    const newUser = new User();
+    newUser.email = signupForm.email;
+    newUser.password = signupForm.password;
+    newUser.nickName = signupForm.nickName;
+
+    if (file) {
+      newUser.profileUrl = await this.fileService.uploadFile(file);
+    }
+    this.userService.create(newUser);
     return res.status(HttpStatus.CREATED).json();
   }
+
   @UseGuards(AuthGuard('access')) // access token 검증
   @Get() // 전체 유저 조회
   async findAll(@Res() res: Response) {
