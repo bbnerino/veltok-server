@@ -60,5 +60,3 @@ app.module.ts
 # ERD 
 
 <img src='./README/veltok_1.png' alt=''>
-
-
