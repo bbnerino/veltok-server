@@ -9,16 +9,12 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
-  constructor(
-    @InjectRepository(User) // user.entity.ts에 정의한 User를 주입
-    private userRepository: Repository<User>, // Repository를 주입
-    private readonly userRepository2: UserRepository,
-  ) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   // 전체 유저 조회
   async getAllUser() {
     // console.log(this.userRepository2.getAll());
-    const users = await this.userRepository2.getAll();
+    const users = await this.userRepository.getAll();
     console.log(users);
     // const userDtos = users.map((user) => new UserDto(user));
     // return userDtos;
@@ -26,24 +22,20 @@ export class UserService {
 
   // 유저 조회 =================
   async findById(id: number) {
-    const user = await this.userRepository2.getOne(id);
+    const user = await this.userRepository.findOneById(id);
     if (!user) throw new UnauthorizedException('유저가 존재하지 않습니다.');
     return new UserDto(user);
   }
 
   // 유저 조회 (로그인용)
   async findByEmail(email: string) {
-    const user = await this.userRepository.findOne({
-      where: { email },
-    });
+    const user = await this.userRepository.findOneByEmail(email);
     if (!user) return null;
     return user;
   }
 
   async findByNickName(nickName: string) {
-    const user = await this.userRepository.findOne({
-      where: { nickName },
-    });
+    const user = await this.userRepository.findOneByNickName(nickName);
     if (!user) throw new UnauthorizedException('유저가 존재하지 않습니다.');
     return new UserDto(user);
   }
@@ -58,7 +50,7 @@ export class UserService {
   }
 
   // 유저 정보 수정
-  async updateById(id: string, signupForm: SignupForm) {
+  async updateById(id: number, signupForm: SignupForm) {
     const user = await this.userRepository.findOneById(id);
     if (!user) return null;
     const newUser = {
@@ -70,7 +62,7 @@ export class UserService {
   }
 
   // 유저 삭제
-  async deleteById(id: string) {
+  async deleteById(id: number) {
     const user = await this.userRepository.findOneById(id);
     this.userRepository.remove(user);
   }

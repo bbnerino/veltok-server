@@ -16,7 +16,7 @@ export class UserRepository {
     return data;
   };
 
-  getOne = async (id: number) => {
+  findOneById = async (id: number) => {
     // const data = await this.userRepository
     //   .createQueryBuilder('user')
     //   .where('user.id = :id', { id })
@@ -26,5 +26,24 @@ export class UserRepository {
       `SELECT * FROM user WHERE id = ${id}`,
     );
     return data[0];
+  };
+
+  findOneByEmail = async (email: string) => {
+    const data = await this.userRepository.findOne({
+      where: { email },
+    });
+    return data;
+  };
+  findOneByNickName = async (nickName: string) => {
+    const data = await this.userRepository.findOne({
+      where: { nickName },
+    });
+    return data;
+  };
+  save = async (user: User) => {
+    await this.userRepository.save(user);
+  };
+  remove = async (user: User) => {
+    this.userRepository.remove(user);
   };
 }
