@@ -1,3 +1,4 @@
+import { UserRepository } from 'src/user/user.repository';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { SignupForm, UpdatePasswordForm } from './data/user.form';
 import { User } from './user.entity';
@@ -11,20 +12,21 @@ export class UserService {
   constructor(
     @InjectRepository(User) // user.entity.ts에 정의한 User를 주입
     private userRepository: Repository<User>, // Repository를 주입
+    private readonly userRepository2: UserRepository,
   ) {}
 
   // 전체 유저 조회
-  async getAllUser(): Promise<UserDto[]> {
-    const users = await this.userRepository.find();
-    const userDtos = users.map((user) => new UserDto(user));
-    return userDtos;
+  async getAllUser() {
+    // console.log(this.userRepository2.getAll());
+    const users = await this.userRepository2.getAll();
+    console.log(users);
+    // const userDtos = users.map((user) => new UserDto(user));
+    // return userDtos;
   }
 
   // 유저 조회 =================
-  async findById(id: number): Promise<UserDto> {
-    const user = await this.userRepository.findOne({
-      where: { id },
-    });
+  async findById(id: number) {
+    const user = await this.userRepository2.getOne(id);
     if (!user) throw new UnauthorizedException('유저가 존재하지 않습니다.');
     return new UserDto(user);
   }

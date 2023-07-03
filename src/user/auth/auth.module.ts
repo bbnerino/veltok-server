@@ -16,7 +16,7 @@ import { JwtAccessStrategy } from './jwt/jwt-access.strategy';
     JwtModule.register({}), // JWT 모듈 등록
   ],
   controllers: [AuthController],
-  providers: [UserService, AuthService, JwtRefreshStrategy, JwtAccessStrategy],
+  providers: [AuthService, JwtRefreshStrategy, JwtAccessStrategy, UserService],
   exports: [JwtRefreshStrategy, JwtAccessStrategy],
 })
 export class AuthModule {}
