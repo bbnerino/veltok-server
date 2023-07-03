@@ -1,4 +1,3 @@
-
 import { FileService } from './../common/file/file.service';
 import {
   Body,
@@ -85,7 +84,7 @@ export class UserController {
   @Put(':id') // 유저 정보 수정
   async updateById(
     @Res() res: Response,
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() signupForm: SignupForm,
   ) {
     const updateUser = await this.userService.updateById(id, signupForm);
@@ -96,7 +95,7 @@ export class UserController {
   }
 
   @Delete(':id') // 유저 삭제
-  deleteById(@Res() res: Response, @Param('id') id: string) {
+  deleteById(@Res() res: Response, @Param('id') id: number) {
     this.userService.deleteById(id);
     return res.status(HttpStatus.OK).json({ message: '삭제 성공' });
   }
