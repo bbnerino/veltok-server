@@ -40,5 +40,5 @@ RUN npm install --only=production
 # 9888번 포트를 개방한다.
 EXPOSE 9888
 
-# npm start를 실행한다.
+# npm start를 실행한다. 
 CMD ["npm", "start:prod"]
