@@ -13,6 +13,11 @@ pipeline {
     }
 
     stages {
+        stage('whoami'){
+            steps{
+                sh 'whoami'
+            }
+        }
         stage('Build') {
             steps {
                 sh 'npm install && npm run build'
