@@ -31,7 +31,10 @@ ENV NODE_ENV=${NODE_ENV}
 COPY package*.json ./
 
 # 빌드된 파일을 /app/dist 디렉토리에 복사한다.
-COPY --from=builder /app/dist ./dist
+# COPY --from=builder /app/dist ./dist
+
+# 빌드된 파일을 /app 디렉토리에 복사한다.
+COPY --from=builder /app ./
 
 # npm install을 실행한다. 
 # --only=production 옵션을 통해 devDependencies를 설치하지 않는다.
@@ -41,4 +44,4 @@ RUN npm install --only=production
 EXPOSE 9888
 
 # npm start를 실행한다. 
-CMD ["npm run start:prod"]
+CMD ["npm", "run", "start:prod"]
