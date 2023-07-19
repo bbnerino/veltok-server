@@ -41,4 +41,4 @@ RUN npm install --only=production
 EXPOSE 9888
 
 # npm start를 실행한다. 
-CMD ["npm", "run start:prod"]
+CMD ["npm run start:prod"]
